@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  server:
+    image: nginx:1.23.2-alpine
+    container_name: nginx
+    restart: always
+    networks: 
+      - backend
+    ports:
+      - ${HTTP_PORT}:${HTTP_PORT}
+      - ${HTTPS_PORT}:${HTTPS_PORT}
+    volumes:
+      - ${TEMPLATES_PATH}:/etc/nginx/templates:ro
+      - ${LOCAL_CERT_PATH}:${CONTAINER_CERT_PATH}:ro
+    env_file: .env
+
+networks:
+  backend:
+    external: true

@@ -1,0 +1,17 @@
+server {
+    listen ${HTTPS_PORT} ssl;
+
+    server_name ${SERVER_NAME_LUCI};
+    ssl_certificate ${CONTAINER_CERT_PATH}/${SERVER_NAME_LUCI}/fullchain.cer;
+    ssl_certificate_key ${CONTAINER_CERT_PATH}/${SERVER_NAME_LUCI}/${SERVER_NAME_LUCI}.key;
+    
+    access_log off;
+
+    location / {
+        proxy_pass http://172.18.0.1:1080/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

@@ -1,0 +1,20 @@
+server {
+    listen ${HTTPS_PORT} ssl;
+
+    server_name ${SERVER_NAME_OWNCLOUD};
+    ssl_certificate         ${CONTAINER_CERT_PATH}/${SERVER_NAME_OWNCLOUD}/fullchain.cer;
+    ssl_certificate_key     ${CONTAINER_CERT_PATH}/${SERVER_NAME_OWNCLOUD}/${SERVER_NAME_OWNCLOUD}.key;
+
+    access_log off;
+
+    location / {
+        proxy_pass http://owncloud:80/;
+        
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+        proxy_buffering off;
+     }
+}
